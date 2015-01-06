@@ -15,6 +15,11 @@ class Tweet {
   
   //Initializer: Sets class properties.
   init (jsonTweet: [String : AnyObject]) {
+    //Dictionary contains:
+    //    * "text" key (string)
+    //    * "user" key > value is dictionary containing:
+    //        "name" key (string)
+    
     //User of tweet:
     if let user = jsonTweet["user"] as? [String : AnyObject] {
       self.username = user["name"] as String

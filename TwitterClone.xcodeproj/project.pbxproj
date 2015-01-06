@@ -15,7 +15,6 @@
 		BA53557F1A5C47E800E162CE /* TwitterCloneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA53557E1A5C47E800E162CE /* TwitterCloneTests.swift */; };
 		BA53558C1A5C487000E162CE /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA53558B1A5C487000E162CE /* Tweet.swift */; };
 		BA53558E1A5C48FF00E162CE /* TweetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA53558D1A5C48FF00E162CE /* TweetCell.swift */; };
-		BA5355901A5C4AEE00E162CE /* tweet.json in Resources */ = {isa = PBXBuildFile; fileRef = BA53558F1A5C4AEE00E162CE /* tweet.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +40,6 @@
 		BA53557E1A5C47E800E162CE /* TwitterCloneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterCloneTests.swift; sourceTree = "<group>"; };
 		BA53558B1A5C487000E162CE /* Tweet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tweet.swift; sourceTree = "<group>"; };
 		BA53558D1A5C48FF00E162CE /* TweetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetCell.swift; sourceTree = "<group>"; };
-		BA53558F1A5C4AEE00E162CE /* tweet.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tweet.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +118,6 @@
 		BA5355881A5C480600E162CE /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				BA53558F1A5C4AEE00E162CE /* tweet.json */,
 				BA53558B1A5C487000E162CE /* Tweet.swift */,
 			);
 			name = Models;
@@ -228,7 +225,6 @@
 				BA53556E1A5C47E800E162CE /* Main.storyboard in Resources */,
 				BA5355731A5C47E800E162CE /* LaunchScreen.xib in Resources */,
 				BA5355701A5C47E800E162CE /* Images.xcassets in Resources */,
-				BA5355901A5C4AEE00E162CE /* tweet.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,6 +439,7 @@
 				BA5355841A5C47E800E162CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BA5355851A5C47E800E162CE /* Build configuration list for PBXNativeTarget "TwitterCloneTests" */ = {
 			isa = XCConfigurationList;
@@ -451,6 +448,7 @@
 				BA5355871A5C47E800E162CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

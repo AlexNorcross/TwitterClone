@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Accounts
+import Social
 
 class ViewController: UIViewController, UITableViewDataSource {
   //Table: to display tweets
@@ -20,24 +22,56 @@ class ViewController: UIViewController, UITableViewDataSource {
     //Super:
     super.viewDidLoad()
     
-    //Load data: from JSON file, containing an array of tweets.
-    //  each array unit contains a dictionary containing:
-    //    * "text" key (string)
-    //    * "user" key > value is dictionary containing:
-    //        "name" key (string)
-    if let dataFilePath = NSBundle.mainBundle().pathForResource("tweet", ofType: "json") { //file exists
-      if let dataFile = NSData(contentsOfFile: dataFilePath) { //data exists
-        var errorPointer: NSError?
-        if let dataArray = NSJSONSerialization.JSONObjectWithData(dataFile, options: nil, error: &errorPointer) as? [AnyObject] { //data in array
-          for dataUnit in dataArray {
-            if let dataDictionary = dataUnit as? [String : AnyObject] { //data in dictionary
-              let newTweet = Tweet(jsonTweet: dataDictionary)
-              tweets.append(newTweet)
-            } //end if
-          } //end for
+    //Access Twitter account and retrieve tweets.
+    //Store & Type:
+    let accountStoreTwitter = ACAccountStore()
+    let accountType = accountStoreTwitter.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
+    //Access Twitter account and handle callback.
+    accountStoreTwitter.requestAccessToAccountsWithType(accountType, options: nil) { (accessGranted, errorHandler) -> Void in
+      //Handle callback re: access to accounts.
+      if accessGranted { //access granted: access first Twitter account and load tweets
+        let accountsTwitter = accountStoreTwitter.accountsWithAccountType(accountType) //Twitter accounts
+        if !accountsTwitter.isEmpty { //has accounts
+          //First Twitter account:
+          let accountTwitter = accountsTwitter.first as ACAccount
+          //Set up request for Twitter timeline: url, request, and account
+          let urlTwitterTimeline = NSURL(string: "https://api.twitter.com/1.1/statuses/home_timeline.json")
+          let requestTwitter = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: SLRequestMethod.GET, URL: urlTwitterTimeline, parameters: nil)
+          requestTwitter.account = accountTwitter
+          //Perform request.
+          requestTwitter.performRequestWithHandler({ (jsonData, urlResponse, errorHandler) -> Void in
+            //If request was successful, parse JSON file; else, handle error.
+            switch urlResponse.statusCode {
+            case 200...299: //success: parse JSON file
+              //JSON file contains an array of tweets.
+              //  each array unit contains a dictionary containing:
+              //    * "text" key (string)
+              //    * "user" key > value is dictionary containing:
+              //        "name" key (string)
+              var errorPointer: NSError?
+              if let dataArray = NSJSONSerialization.JSONObjectWithData(jsonData, options: nil, error: &errorPointer) as? [AnyObject] { //data in array
+                for dataUnit in dataArray {
+                  if let dataDictionary = dataUnit as? [String : AnyObject] { //data in dictionary
+                    let newTweet = Tweet(jsonTweet: dataDictionary)
+                    self.tweets.append(newTweet)
+                  } //end if
+                } //end for
+              } //end if
+              //Return to main thread.
+              NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                self.tableTweets.reloadData()
+              } //end closure
+            default: //error
+              println("twitter account error")
+            } //end switch
+          }) //end closure
+        } else { //no accounts
+          println("no accounts")
         } //end if
+      } else { //access not granted
+        println("access not granted")
       } //end if
-    } //end if
+    } //end closure
     
     //Table view: data source.
     tableTweets.dataSource = self
