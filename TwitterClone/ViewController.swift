@@ -7,74 +7,35 @@
 //
 
 import UIKit
-import Accounts
-import Social
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   //Table: to display tweets
   @IBOutlet weak var tableTweets: UITableView!
+  
+  //Network Controller: to access Twitter account
+  let networkController = NetworkController()
   
   //Array of tweets: to display in table
   var tweets = [Tweet]()
   
-  //Function: Set view controller.
+  //Function: Set View Controller to display Tweets.
   override func viewDidLoad() {
     //Super:
     super.viewDidLoad()
     
-    //Access Twitter account and retrieve tweets.
-    //Store & Type:
-    let accountStoreTwitter = ACAccountStore()
-    let accountType = accountStoreTwitter.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
-    //Access Twitter account and handle callback.
-    accountStoreTwitter.requestAccessToAccountsWithType(accountType, options: nil) { (accessGranted, errorHandler) -> Void in
-      //Handle callback re: access to accounts.
-      if accessGranted { //access granted: access first Twitter account and load tweets
-        let accountsTwitter = accountStoreTwitter.accountsWithAccountType(accountType) //Twitter accounts
-        if !accountsTwitter.isEmpty { //has accounts
-          //First Twitter account:
-          let accountTwitter = accountsTwitter.first as ACAccount
-          //Set up request for Twitter timeline: url, request, and account
-          let urlTwitterTimeline = NSURL(string: "https://api.twitter.com/1.1/statuses/home_timeline.json")
-          let requestTwitter = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: SLRequestMethod.GET, URL: urlTwitterTimeline, parameters: nil)
-          requestTwitter.account = accountTwitter
-          //Perform request.
-          requestTwitter.performRequestWithHandler({ (jsonData, urlResponse, errorHandler) -> Void in
-            //If request was successful, parse JSON file; else, handle error.
-            switch urlResponse.statusCode {
-            case 200...299: //success: parse JSON file
-              //JSON file contains an array of tweets.
-              //  each array unit contains a dictionary containing:
-              //    * "text" key (string)
-              //    * "user" key > value is dictionary containing:
-              //        "name" key (string)
-              var errorPointer: NSError?
-              if let dataArray = NSJSONSerialization.JSONObjectWithData(jsonData, options: nil, error: &errorPointer) as? [AnyObject] { //data in array
-                for dataUnit in dataArray {
-                  if let dataDictionary = dataUnit as? [String : AnyObject] { //data in dictionary
-                    let newTweet = Tweet(jsonTweet: dataDictionary)
-                    self.tweets.append(newTweet)
-                  } //end if
-                } //end for
-              } //end if
-              //Return to main thread.
-              NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-                self.tableTweets.reloadData()
-              } //end closure
-            default: //error
-              println("twitter account error")
-            } //end switch
-          }) //end closure
-        } else { //no accounts
-          println("no accounts")
-        } //end if
-      } else { //access not granted
-        println("access not granted")
+    //Fetch and display Twitter account timeline.
+    networkController.fetchHomeTimeline { (tweets, errorString) -> () in
+      if errorString == nil { //no errors: reload table to display timeline
+        self.tweets = tweets!
+        self.tableTweets.reloadData()
+      } else { //error: print error
+        println(errorString!)
       } //end if
     } //end closure
-    
-    //Table view: data source.
+        
+    //Table view: data source & delegate.
     tableTweets.dataSource = self
+    tableTweets.delegate = self
   } //end func
   
   //Function: Set table row count.
@@ -88,11 +49,34 @@ class ViewController: UIViewController, UITableViewDataSource {
     var cellTweet = tableView.dequeueReusableCellWithIdentifier("CELL_TWEET", forIndexPath: indexPath) as TweetCell
     //Current tweet array/table row:
     var currentTweet = tweets[indexPath.row]
-    //Set cell contents:
+    //Set cell contents.
     cellTweet.labelTweet.text = currentTweet.text
     cellTweet.labelUsername.text = currentTweet.username
     //Return cell.
     return cellTweet
+  } //end func
+  
+  //Function: Display Tweet infomation when user selects a cell.
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    //Selected Tweet:
+    let selectedTweet = tweets[indexPath.row]
+    
+    //Fetch information of selected Tweet and handle callback.
+    networkController.fetchTweetInfo(selectedTweet.id, keyTweetInfo: "favorite_count", completionHandler: { (countFavorite, errorString) -> () in
+      if errorString == nil { //no errors: display Tweet information View Controller
+        //Set selected Tweet's information.
+        selectedTweet.countFavorite = countFavorite!
+        
+        //Get Tweet information View Controller; and set selected Tweet.
+        let vcTweetInfo = self.storyboard?.instantiateViewControllerWithIdentifier("VC_TWEET_INFO") as TweetInfoViewController
+        vcTweetInfo.selectedTweet = selectedTweet
+        
+        //Display Tweet information View Controller.
+        self.navigationController?.pushViewController(vcTweetInfo, animated: true)
+      } else { //error: print error
+        println(errorString!)
+      } //end if
+    }) //end closure
   } //end func
 }
 
