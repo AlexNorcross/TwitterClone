@@ -16,19 +16,25 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   let networkController = NetworkController()
   
   //Array of tweets: to display in table
-  var tweets = [Tweet]()
+  var tweets: [Tweet]?
   
   //Function: Set View Controller to display Tweets.
   override func viewDidLoad() {
     //Super:
     super.viewDidLoad()
     
-    //Fetch and display Twitter account timeline.
+    //Register table view cell nib.
+    tableTweets.registerNib(UINib(nibName: "TweetCell", bundle: NSBundle.mainBundle()), forCellReuseIdentifier: "CELL_TWEET")
+    //Adjust row height [automatically].
+    tableTweets.estimatedRowHeight = 144
+    tableTweets.rowHeight = UITableViewAutomaticDimension
+    
+    //Fetch and display Twitter timeline.
     networkController.fetchHomeTimeline { (tweets, errorString) -> () in
-      if errorString == nil { //no errors: reload table to display timeline
+      if errorString == nil {
         self.tweets = tweets!
-        self.tableTweets.reloadData()
-      } else { //error: print error
+        self.tableTweets.reloadData() //reload table to display timeline
+      } else {
         println(errorString!)
       } //end if
     } //end closure
@@ -40,7 +46,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   
   //Function: Set table row count.
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return tweets.count
+    if tweets != nil {
+      return tweets!.count
+    } else {
+      return 0
+    } //end if
   } //end func
   
   //Function: Set table cell contents.
@@ -48,35 +58,33 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     //Cell:
     var cellTweet = tableView.dequeueReusableCellWithIdentifier("CELL_TWEET", forIndexPath: indexPath) as TweetCell
     //Current tweet array/table row:
-    var currentTweet = tweets[indexPath.row]
+    var currentTweet = tweets![indexPath.row]
+    
     //Set cell contents.
     cellTweet.labelTweet.text = currentTweet.text
     cellTweet.labelUsername.text = currentTweet.username
+    networkController.fetchUserImage(currentTweet, completionHandler: { (imageUser) -> () in
+      if imageUser != nil {
+        cellTweet.imageUser.image = imageUser
+      } //end if
+    }) //end closure
+    
     //Return cell.
     return cellTweet
   } //end func
   
-  //Function: Display Tweet infomation when user selects a cell.
+  //Function: Display Tweet infomation View Controller when cell is selected.
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     //Selected Tweet:
-    let selectedTweet = tweets[indexPath.row]
+    let selectedTweet = tweets![indexPath.row]
     
-    //Fetch information of selected Tweet and handle callback.
-    networkController.fetchTweetInfo(selectedTweet.id, keyTweetInfo: "favorite_count", completionHandler: { (countFavorite, errorString) -> () in
-      if errorString == nil { //no errors: display Tweet information View Controller
-        //Set selected Tweet's information.
-        selectedTweet.countFavorite = countFavorite!
-        
-        //Get Tweet information View Controller; and set selected Tweet.
-        let vcTweetInfo = self.storyboard?.instantiateViewControllerWithIdentifier("VC_TWEET_INFO") as TweetInfoViewController
-        vcTweetInfo.selectedTweet = selectedTweet
-        
-        //Display Tweet information View Controller.
-        self.navigationController?.pushViewController(vcTweetInfo, animated: true)
-      } else { //error: print error
-        println(errorString!)
-      } //end if
-    }) //end closure
+    //Prepare Tweet information View Controller.
+    let vcTweetInfo = self.storyboard?.instantiateViewControllerWithIdentifier("VC_TWEET_INFO") as TweetInfoViewController
+    vcTweetInfo.networkController = networkController
+    vcTweetInfo.selectedTweet = selectedTweet
+    
+    //Display View Controller.
+    self.navigationController?.pushViewController(vcTweetInfo, animated: true)
   } //end func
 }
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA21F1EE1A5F43CE0039558E /* UserTimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA21F1ED1A5F43CE0039558E /* UserTimelineViewController.swift */; };
+		BA51C60E1A5F337A00F73E26 /* TweetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA51C60D1A5F337A00F73E26 /* TweetCell.xib */; };
 		BA5355691A5C47E800E162CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5355681A5C47E800E162CE /* AppDelegate.swift */; };
 		BA53556B1A5C47E800E162CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA53556A1A5C47E800E162CE /* ViewController.swift */; };
 		BA53556E1A5C47E800E162CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA53556C1A5C47E800E162CE /* Main.storyboard */; };
@@ -30,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BA21F1ED1A5F43CE0039558E /* UserTimelineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTimelineViewController.swift; sourceTree = "<group>"; };
+		BA51C60D1A5F337A00F73E26 /* TweetCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TweetCell.xib; sourceTree = "<group>"; };
 		BA5355631A5C47E800E162CE /* TwitterClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA5355671A5C47E800E162CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA5355681A5C47E800E162CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -44,6 +48,7 @@
 		BA53558D1A5C48FF00E162CE /* TweetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetCell.swift; sourceTree = "<group>"; };
 		BA5F25231A5DD029008F4673 /* NetworkController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
 		BA5F25251A5DEEAA008F4673 /* TweetInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetInfoViewController.swift; sourceTree = "<group>"; };
+		BA8A97811A60704B0013904B /* Stack.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Stack.playground; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +95,7 @@
 				BA53558A1A5C482000E162CE /* Controllers */,
 				BA5355681A5C47E800E162CE /* AppDelegate.swift */,
 				BA5355661A5C47E800E162CE /* Supporting Files */,
+				BA8A97811A60704B0013904B /* Stack.playground */,
 			);
 			path = TwitterClone;
 			sourceTree = "<group>";
@@ -134,6 +140,7 @@
 				BA5355711A5C47E800E162CE /* LaunchScreen.xib */,
 				BA53556C1A5C47E800E162CE /* Main.storyboard */,
 				BA53558D1A5C48FF00E162CE /* TweetCell.swift */,
+				BA51C60D1A5F337A00F73E26 /* TweetCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -142,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				BA53556A1A5C47E800E162CE /* ViewController.swift */,
+				BA21F1ED1A5F43CE0039558E /* UserTimelineViewController.swift */,
 				BA5F25251A5DEEAA008F4673 /* TweetInfoViewController.swift */,
 				BA5F25231A5DD029008F4673 /* NetworkController.swift */,
 			);
@@ -231,6 +239,7 @@
 				BA53556E1A5C47E800E162CE /* Main.storyboard in Resources */,
 				BA5355731A5C47E800E162CE /* LaunchScreen.xib in Resources */,
 				BA5355701A5C47E800E162CE /* Images.xcassets in Resources */,
+				BA51C60E1A5F337A00F73E26 /* TweetCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +260,7 @@
 				BA5F25261A5DEEAA008F4673 /* TweetInfoViewController.swift in Sources */,
 				BA5F25241A5DD029008F4673 /* NetworkController.swift in Sources */,
 				BA53558C1A5C487000E162CE /* Tweet.swift in Sources */,
+				BA21F1EE1A5F43CE0039558E /* UserTimelineViewController.swift in Sources */,
 				BA53556B1A5C47E800E162CE /* ViewController.swift in Sources */,
 				BA5355691A5C47E800E162CE /* AppDelegate.swift in Sources */,
 				BA53558E1A5C48FF00E162CE /* TweetCell.swift in Sources */,
